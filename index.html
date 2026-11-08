@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бенедикт — аттестация администраторов</title>
+<style>
+:root{--bg:#F8F6F0;--card:#fff;--ink:#000;--mute:#615C5A;--line:#E8E6DE;--acc:#BC5A40;--acc2:#F3E4DE;--soft:#ECEAE4;--olive:#EEF0E2;--bad:#B3261E;--bad2:#F8E3E0;--ok:#4D6B3C;--ok2:#EEF0E2;--warn:#8A6A1F;--warn2:#F5EEDC}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 TildaSans,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.shell{max-width:1100px;margin:0 auto;padding:16px}
+.hero{background:#000;color:#fff;border-radius:20px;padding:20px 20px 40px}
+.nav{background:#fff;border-radius:12px;padding:8px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{background:#000;border-radius:8px;padding:8px 18px;color:#fff;line-height:1;text-align:center}
+.logo b{display:block;font-weight:300;font-size:20px;letter-spacing:.12em}
+.logo small{display:block;font-size:7px;letter-spacing:.9em;margin-top:3px;padding-left:.9em}
+.nav .lbl{color:#000;font-size:15px}
+.hero h1{font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.01em;margin:56px 0 12px}
+.hero .sub{color:rgba(255,255,255,.75);margin:0;max-width:560px}
+.wrap{max-width:820px;margin:0 auto;padding:28px 0 80px}
+h2{font-weight:400;font-size:26px;letter-spacing:-.01em;margin:36px 0 10px}
+h3{font-weight:400;font-size:20px;margin:24px 0 8px}
+.card{background:var(--card);border-radius:16px;padding:22px;margin:12px 0}
+.btn{appearance:none;border:0;background:var(--acc);color:#fff;border-radius:8px;padding:13px 20px;font:inherit;cursor:pointer;transition:filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--soft);color:#000}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:1px solid transparent;border-radius:10px;padding:12px 14px;margin:8px 0;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--line)}
+.opt input{margin-top:4px;accent-color:var(--acc)}
+.opt.sel{border-color:var(--acc);background:var(--acc2)}
+.q{font-size:17px;margin-bottom:8px}
+.tag{display:inline-block;font-size:13px;padding:4px 12px;border-radius:99px;background:var(--soft);color:#000}
+.tag.bad{background:var(--bad2);color:var(--bad)}
+.tag.ok{background:var(--ok2);color:var(--ok)}
+.tag.warn{background:var(--warn2);color:var(--warn)}
+textarea{width:100%;min-height:80px;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+textarea:focus{outline:none;border-color:var(--acc)}
+.progress{position:sticky;top:0;background:var(--bg);padding:12px 0;z-index:2}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:var(--acc);width:0;transition:width .2s}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:400}
+.mute{color:var(--mute)}
+.small{font-size:14px}
+.expl{font-size:14px;color:var(--mute);margin-top:8px}
+.res-wrong{border-left:3px solid var(--acc)}
+.notice{background:var(--olive);color:#000;border-radius:10px;padding:12px 14px;font-size:14px}
+select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tabs button{border:0;background:var(--soft);color:#000;border-radius:8px;padding:10px 16px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--acc);color:#fff}
+.hide{display:none}
+ul{padding-left:20px}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="hero">
+    <div class="nav">
+      <div class="logo"><b>BENEDICT</b><small>КЛИНИКА</small></div>
+      <span class="lbl">Аттестация администраторов</span>
+      <div class="tabs hide" id="tabs">
+        <button data-v="test" class="on">Пройти тест</button>
+        <button data-v="mgr">Результаты команды</button>
+      </div>
+    </div>
+    <h1>Стандарт общения<br>с пациентом</h1>
+    <p class="sub">Проверка по скрипту администратора v1. Цены — на 08.11.2026.</p>
+  </div>
+  <div class="wrap"><div id="app"></div></div>
+</div>
+<script>
+// ---------- ВОПРОСЫ ----------
+const PARTS = [
+ {id:"p1", title:"Часть 1. Стоп-блок", note:"Порог — 10 из 10. Одна ошибка — пересдача части через 3 дня.", type:"mcq", qs:[
+  {id:"1.1", t:"Мама 18-летней пациентки: «У неё сильная тревога, постоянно паники, и ощущение, что всё бессмысленно и ничего не поможет». Ваше первое действие?", o:{"а":"Успокоить: «Это похоже на паническое расстройство, с ним хорошо работают»","б":"Задать прямой вопрос: бывают ли у дочери мысли не жить или причинить себе вред","в":"Предложить самого доступного врача и ближайшую дату","г":"Попросить, чтобы дочь позвонила сама"}, k:"б", e:"«Всё бессмысленно, ничего не поможет» — безнадёжность, сигнал стоп-блока. Вариант «а» — диагноз от администратора."},
+  {id:"1.2", t:"Пациент: «У меня нет сил, я уже вторую неделю лежу, не вставая». На вопрос о мыслях не жить отвечает «нет». Что дальше?", o:{"а":"Маршрут В: обычная запись, раз ответ «нет»","б":"Предложить записаться через сайт в удобное время","в":"Маршрут Б: тяжёлые симптомы — передать дежурному врачу, несмотря на ответ «нет»","г":"Внести в лист ожидания к желаемому врачу"}, k:"в", e:"Две недели в постели — тяжёлый симптом. Ответ «нет» не переводит в маршрут В."},
+  {id:"1.3", t:"Ассистент пациента: «Ночью из-за смены дозировки было очень высокое давление, вызывали скорую. Передайте врачу, чтобы прочитал сообщение». Верный порядок?", o:{"а":"Спросить, как пациент сейчас; при повторе — 103. Позвонить врачу голосом, получить подтверждение, назвать ассистенту срок, записать в журнал","б":"«Хорошо, передам, он оперативно зайдёт в телеграм»","в":"Предложить приём сегодня в 16:00 и закончить разговор","г":"Посоветовать вернуться к прежней дозе до связи с врачом"}, k:"а", e:"Текущее состояние, 103 при повторе, голосом врачу, подтверждение, срок, журнал. Вариант «г» — совет по лечению, критическое нарушение."},
+  {id:"1.4", t:"Сестра пациента: «Мания держится, дозу снизили, а он почти не спит. Когда он у вас был?» Ваш ответ?", o:{"а":"Назвать дату визита и пообещать спросить врача","б":"Объяснить, что приём врача дорогой и первый был исключением","в":"Попросить, чтобы брат сам написал врачу","г":"Не подтверждать факт лечения, принять информацию и сегодня же передать врачу как срочную; при опасном поведении — 103"}, k:"г", e:"Врачебная тайна и срочность одновременно: информацию принимаем, сведения о пациенте не сообщаем."},
+  {id:"1.5", t:"Женщина: «Муж выпил много таблеток, сейчас очень сонный. Можно записаться к врачу на завтра?»", o:{"а":"Записать на завтра на первое время","б":"Маршрут А: просить немедленно вызвать 103, уточнить адрес, остаться на линии, потом сообщить дежурному врачу","в":"Передать дежурному врачу и попросить дождаться его звонка","г":"Посоветовать дать мужу воды и уложить спать"}, k:"б", e:"Передозировка и сонливость — непосредственная угроза, маршрут А. Вариант «в» теряет время."},
+  {id:"1.6", t:"Пациентка хочет к неврологу: «Час назад онемела правая рука и заплетается язык. Есть время завтра?»", o:{"а":"Маршрут А: сразу 103, не ждать свободного времени у невролога","б":"Записать к Куваеву на ближайшее время","в":"Передать вопрос дежурному врачу и перезвонить через 15 минут","г":"Предложить онлайн-консультацию сегодня вечером"}, k:"а", e:"Внезапная слабость руки и нарушение речи — признаки инсульта, счёт на часы."},
+  {id:"1.7", t:"Вы позвонили первому врачу цепочки, он не отвечает. Через сколько минут звоните Цверкову С. П.?", o:{"а":"Через 30 минут","б":"Когда у первого врача закончится приём","в":"Через 10 минут без ответа или сразу, если все врачи цепочки на приёме","г":"Только если пациент позвонит повторно"}, k:"в", e:"Цепочка из скрипта: 10 минут без ответа или сразу, если все заняты."},
+  {id:"1.8", t:"Вы написали врачу в мессенджер о красном флаге. Сообщение прочитано, ответа нет. Передача состоялась?", o:{"а":"Да, сообщение прочитано","б":"Нет: нужен звонок голосом и подтверждение «принял, свяжусь до…»","в":"Да, если прошло больше 10 минут","г":"Да, если сообщение отправлено в общий чат врачей"}, k:"б", e:"Сообщение без подтверждения не считается передачей: ответственность остаётся у администратора."},
+  {id:"1.9", t:"Женщина о взрослом мужчине с игровой зависимостью: «Он очень подавлен, всякие мысли, думает про свою никчёмную жизнь. А врач женщина или мужчина?» Что делаете первым?", o:{"а":"Отвечаете на вопрос про пол врача","б":"Рассказываете о КПТ и доказательном подходе клиники","в":"Предлагаете ей посоветоваться с ним и перезвонить","г":"Задаёте вопрос о безопасности про него: говорил ли он о том, чтобы не жить или причинить себе вред"}, k:"г", e:"«Никчёмная жизнь» + долги + подавленность — сначала безопасность."},
+  {id:"1.10", t:"Что НЕ должно быть в блоке «A — что сказано» карты передачи врачу?", o:{"а":"Дословные слова звонящего","б":"Ответ на вопрос о безопасности","в":"Предположение администратора о диагнозе","г":"То, что уже сделано (например, вызывали скорую)"}, k:"в", e:"В карте только факты и дословные слова; диагноз — дело врача."}
+ ]},
+ {id:"p2", title:"Часть 2. Найдите ошибку в реплике", note:"Для каждой реплики напишите: что не так и как сказать правильно. Проверяет тренер.", type:"free", qs:[
+  {id:"2.1", t:"Мама говорит, что у сына нет сил. Администратор: «Это же может быть не только депрессия. Это может быть биполярное расстройство… дефицит определённых гормонов».", k:"Диагнозы от администратора. Правильно: «Упадок сил бывает по разным причинам, именно для этого нужен приём. Записываю?» (+ вопрос о безопасности, если сил нет давно)."},
+  {id:"2.2", t:"Мама рассказывает, что невролог сказал «всё само пройдёт». Администратор: «Сейчас диагноз является ошибочным. Вы правильно сделали, что записались именно к психиатру».", k:"Оценка чужого заключения. Правильно: «Понимаю, как это неприятно. Врач посмотрит всё заново, возьмите предыдущие заключения»."},
+  {id:"2.3", t:"«А вообще вылечиваются?» — «В основном у нас положительная динамика… вполне могут выздороветь за не слишком долгий срок».", k:"Обещание результата. Правильно: «Прогноз обсудит врач после первой встречи. Задача первого приёма — понятный план»."},
+  {id:"2.4", t:"«Можно записаться через ПроДокторов. Там выйдет много дешевле».", k:"Сам отправляет в агрегатор. Правильно: «Давайте я запишу вас сейчас»; цена — из МИС."},
+  {id:"2.5", t:"Пациентка хочет к конкретному врачу. «[Врач] немножко начинает отходить от дел… удачно вышла замуж… в целом не хочет уже работать».", k:"Личная жизнь врача. Правильно: «У [врача] ограниченное расписание. Вношу в лист ожидания; если не терпит — предложу коллегу»."},
+  {id:"2.6", t:"Пациентке отменили приём. «Давайте я вам в течение пяти минут перезвоню и сообщу информацию» (перезвона не было час).", k:"Неконтролируемый срок без задачи. Правильно: «Перезвоню до [время], даже если ответа ещё не будет» + задача в CRM."},
+  {id:"2.7", t:"«Мы с вами подписываем отказ от передачи данных, и вся информация остаётся только в нашей базе, никуда не передаётся».", k:"Обещание, которое клиника может не выполнить. Правильно: фраза про анонимность из скрипта (врачебная тайна; без согласия не сообщаем родственникам и работодателю; анонимный формат — расскажу условия)."},
+  {id:"2.8", t:"Пациент: «Я подумаю, хорошо». Администратор: «Да, хорошо, конечно, будем ждать вашего звонка. До свидания».", k:"Нет следующего шага. Правильно: предварительная бронь с согласия или сообщение в мессенджер с профилем врача."},
+  {id:"2.9", t:"Мама 17-летней: «Дочь придёт одна». Администратор: «Нам главное — получить разрешение от вас в устной форме. У нас разговоры пишутся».", k:"Устное согласие вместо оформления. Правильно: «С 15 лет пациент сам подписывает согласие, нужен паспорт» [формулировка на проверке у юриста]."}
+ ]},
+ {id:"p3", title:"Часть 3. Подбор врача и цена", note:"Цены — по онлайн-записи на 08.11.2026. На линии цена всегда берётся из МИС.", type:"mcq", qs:[
+  {id:"3.1", t:"Ребёнок 6 лет, первичный приём. У Борисычева нет мест в ближайший месяц. Кого предложить?", o:{"а":"Лебедеву З. В.","б":"Мельникову А. Н.","в":"Куваеву (Бердыеву) Г. А. или Ставцева Н. А.","г":"Джабарову И. М."}, k:"в", e:"Куваева (Бердыева) принимает с 2 лет, Ставцев — с 3. Лебедева — с 15, Мельникова — с 12, Джабарова — с 17."},
+  {id:"3.2", t:"Сколько стоит первичный приём у Барны И. В.?", o:{"а":"12 000 ₽","б":"11 000 ₽, 60 минут","в":"8 400 ₽","г":"6 000 ₽"}, k:"б", e:"11 000 ₽ за 60 минут. 6 000 ₽ — повторный 30 минут."},
+  {id:"3.3", t:"Сколько стоит первичный приём у Куваева В. А.?", o:{"а":"9 000 ₽, 60 минут","б":"12 000 ₽","в":"17 000 ₽","г":"6 000 ₽"}, k:"а", e:"9 000 ₽. В звонке #3 ошибочно назвали 12 000."},
+  {id:"3.4", t:"Подросток 16 лет, проблемы с алкоголем. К кому из наркологов можно записать?", o:{"а":"Агинян М. Э.","б":"Джабарова И. М.","в":"Ёжиков А. Ю.","г":"Комаров С. Д. или Барна И. В."}, k:"г", e:"Агинян — только взрослые, Джабарова — с 17, Ёжиков — психолог с 18. Комаров — с 16, Барна — подростки 15–17."},
+  {id:"3.5", t:"«Мой психолог посоветовал прийти к вам на диагностику». Куда записываем?", o:{"а":"К врачу-психиатру на первичный приём","б":"К любому свободному психологу","в":"Только к главному эксперту","г":"Предлагаем выбрать на сайте"}, k:"а", e:"Диагностику проводит врач. Отправлять на сайт — терять пациента."},
+  {id:"3.6", t:"Первичный и повторный приём у Степановой Н. А.:", o:{"а":"60 минут, 18 000 ₽; повторный тоже 18 000 ₽","б":"90 минут, 18 000 ₽; повторный 60 минут, 16 000 ₽","в":"60 минут, 17 000 ₽","г":"90 минут, 12 500 ₽"}, k:"б", e:"Первичный 90 минут — 18 000 ₽, повторный 60 минут — 16 000 ₽. В звонке #187 повторный назвали 18 000."}
+ ]},
+ {id:"p4", title:"Часть 4. Конфиденциальность, дети и подростки", note:"Ответы — по формулировкам скрипта с пометкой [ЮРИСТ]; после заключения юриста часть перепроверить.", type:"mcq", qs:[
+  {id:"4.1", t:"Подросток 15 лет хочет прийти на приём без родителей. Верный ответ:", o:{"а":"«До 18 лет только с родителями»","б":"«С 15 лет пациент сам подписывает согласие. Прийти можно без родителей, нужен паспорт»","в":"«Можно, если родитель устно разрешит по телефону»","г":"«Можно, и мы гарантируем, что родители ничего не узнают»"}, k:"б", e:"Вариант «г» неверен: гарантировать тайну от родителей до заключения юриста нельзя."},
+  {id:"4.2", t:"Ребёнок 13 лет. Что нужно для приёма?", o:{"а":"Родитель или другой законный представитель на приёме, свидетельство о рождении и паспорт представителя","б":"Ребёнок может прийти сам со свидетельством о рождении","в":"Достаточно любого взрослого сопровождающего","г":"Родитель по видеосвязи, без документов"}, k:"а", e:"До 15 лет согласие даёт законный представитель."},
+  {id:"4.3", t:"Пациентка по телефону: «Отдайте мой рецепт водителю, он скажет фамилию».", o:{"а":"Отдать, если водитель назовёт фамилию","б":"Отправить фото рецепта в мессенджер","в":"Отдать любому, кто знает дату приёма","г":"Выдать только лично или по письменному разрешению пациентки по утверждённой форме"}, k:"г", e:"Документы третьим лицам — только по письменному разрешению."},
+  {id:"4.4", t:"Мужчина: «Моя жена была у вас вчера? Что ей назначили?»", o:{"а":"Сверить с МИС и подтвердить визит, но не говорить о назначениях","б":"Передать трубку врачу","в":"«Я не могу подтвердить или обсудить обращение другого человека. Если вас что-то беспокоит, расскажите — я передам врачу»","г":"Попросить назвать дату рождения жены и тогда ответить"}, k:"в", e:"Даже факт визита не подтверждаем. Информацию от родственника принимаем."},
+  {id:"4.5", t:"«У вас анонимно?» Какой ответ допустим до заключения юриста?", o:{"а":"«Да, вся информация остаётся в нашей базе и никуда не передаётся»","б":"«Можно без паспорта под любым именем, и рецепт тоже выпишем»","в":"«Всё, что вы расскажете врачу, — врачебная тайна. Без вашего согласия мы не сообщаем об обращении ни родственникам, ни работодателю. Если важно прийти анонимно, расскажу, как это оформить и какие есть ограничения»","г":"«Вы подпишете отказ от передачи данных в департамент здравоохранения»"}, k:"в", e:"«а», «б», «г» — обещания, которые клиника может не выполнить."}
+ ]},
+ {id:"p5", title:"Часть 5. Следующий шаг", note:"", type:"mcq", qs:[
+  {id:"5.1", t:"Пациент после цены и времени: «Я подумаю». Лучший ответ:", o:{"а":"«Хорошо, будем ждать вашего звонка»","б":"«Места быстро заканчиваются, лучше записаться сейчас»","в":"«Конечно. Могу придержать за вами это время до вечера и прислать профиль врача. В каком мессенджере удобнее?»","г":"«Вы можете сами выбрать время на сайте»"}, k:"в", e:"«б» — давление, «г» — пациент уходит с линии, «а» — нет следующего шага."},
+  {id:"5.2", t:"Врач отменил приём за 2 дня, пациентка уже купила билеты в Москву. Первая фраза:", o:{"а":"«Я администратор, могу только передать вам номер директора»","б":"«Извините, пожалуйста, это наша ситуация. Хочу предложить варианты, чтобы ваша поездка не пропала»","в":"«У врача семейные обстоятельства, ничего не поделаешь»","г":"Ничего не говорить: пациентке уже отправлено SMS"}, k:"б", e:"Извинение от имени клиники и варианты сразу."},
+  {id:"5.3", t:"Пациентка на лечении: «Состояние стабильное. Хочу спросить врача, переходить ли на второй препарат».", o:{"а":"Записать вопрос дословно, спросить канал ответа, назвать срок, передать врачу, ответ передать дословно","б":"Посоветовать пока ничего не менять","в":"Сказать, что врач отвечает только на приёме","г":"Посмотреть назначения в карте и ответить самостоятельно"}, k:"а", e:"Образец — звонок #333. «б» и «г» — совет по лечению."},
+  {id:"5.4", t:"Вы пообещали пациенту ответ до 16:30. В 16:30 врач ещё не ответил. Ваши действия?", o:{"а":"Ждать ответа врача, потом перезвонить","б":"Устно передать следующей смене","в":"Ничего: пациент перезвонит сам","г":"Связаться с пациентом: «Врач ещё на приёме, отвечу вам до [время]» — и обновить срок в CRM"}, k:"г", e:"Обещанный срок соблюдается, даже если ответа ещё нет."}
+ ]}
+];
+PARTS.forEach(p=>p.qs.forEach(q=>{ q.key=q.id.replace(".","_"); }));
+const SIMS = [
+ {id:"C1", t:"С1. Реакция на препарат", crit:true, items:["Остановил обычный сценарий и спросил, как пациент сейчас","Назвал 103 на случай повтора","Не дал совета про приём препарата","Позвонил врачу голосом, передал сводку по SBAR","Получил подтверждение, назвал звонящему точное время связи","Записал событие в журнал красных флагов"]},
+ {id:"C2", t:"С2. Подросток, безнадёжность", crit:true, items:["Задал вопрос о безопасности до ответа про цену","Ответ «не знаю» воспринял как сигнал: маршрут Б","Не назвал диагноз и не пообещал «пройдёт»","Дал инструкцию: при ухудшении — звонить, при угрозе — 103","Не пообещал ни тайну от мамы, ни что маме всё расскажут","Цену и формат назвал после маршрутизации"]},
+ {id:"C3", t:"С3. Инсульт под видом записи", crit:true, items:["Не стал записывать и сразу направил в 103","Уточнил, есть ли кто-то рядом; если нет — узнал адрес и вызвал сам","Сообщил дежурному врачу и записал в журнал"]},
+ {id:"C4", t:"С4. Запись ребёнка 6 лет (Борисычев занят)", crit:false},
+ {id:"C5", t:"С5. «Дорого, я подумаю»", crit:false},
+ {id:"C6", t:"С6. Зависимость у родственника и анонимность", crit:false}
+];
+const CRITERIA = [["Распознавание срочности и маршрут",20],["Уважение и психологическая безопасность",20],["Точность понимания запроса",15],["Соответствие врача запросу",15],["Прозрачность цены и условий",10],["Согласованный следующий шаг",10],["Документирование и передача",10]];
+const AUTO_PARTS = ["p3","p4","p5"];
+const AUTO_TOTAL = PARTS.filter(p=>AUTO_PARTS.includes(p.id)).reduce((s,p)=>s+p.qs.length,0); // 15
+const FREE_TOTAL = PARTS.find(p=>p.id==="p2").qs.length; // 9
+const P1_TOTAL = PARTS[0].qs.length;
+
+// ---------- УТИЛИТЫ ----------
+const $ = s => document.querySelector(s);
+const el = (tag, attrs={}, ...kids) => { const n=document.createElement(tag); for(const [k,v] of Object.entries(attrs)){ if(k==="class") n.className=v; else if(k.startsWith("on")) n.addEventListener(k.slice(2),v); else if(v!==false && v!=null) n.setAttribute(k,v);} for(const c of kids.flat()){ if(c==null) continue; n.append(c.nodeType?c:document.createTextNode(String(c))); } return n; };
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+const LETTERS = ["а","б","в","г"];
+const dd = d => !d ? null : (typeof d.data==="function" ? d.data() : (d.data && typeof d.data==="object" ? d.data : d));
+const fmtDate = ts => new Date(ts).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+
+let db=null, user=null, myId=null, isMgr=false;
+let state = { view:"test", stage:"intro", answers:{}, free:{}, order:{} };
+
+// ---------- ПОДКЛЮЧЕНИЕ ----------
+async function boot(){
+  render();
+  const timer=0;
+  user=null; db=null;
+  clearTimeout(timer);
+  try { if(user){ myId = await user.id(); isMgr = !!(user.isOwner?.() || user.canEdit?.()); } } catch(e){}
+  if(isMgr) $("#tabs").classList.remove("hide");
+  render();
+}
+document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>{ state.view=b.dataset.v; document.querySelectorAll("#tabs button").forEach(x=>x.classList.toggle("on",x===b)); render(); }));
+
+function render(){
+  const app=$("#app"); app.innerHTML="";
+  if(state.view==="mgr") return renderMgr(app);
+  if(state.stage==="intro") return renderIntro(app);
+  if(state.stage==="test") return renderTest(app);
+  if(state.stage==="done") return renderDone(app);
+}
+
+// ---------- ВВЕДЕНИЕ ----------
+function renderIntro(app){
+  app.append(el("div",{class:"card"},
+    el("h2",{style:"margin-top:0;font-size:22px"},"Как устроен тест"),
+    el("p",{},"34 вопроса в пяти частях. Займёт около 30 минут. Ответы на вопросы с выбором проверяются сразу; часть 2 (найти ошибку в реплике) проверяет тренер."),
+    el("ul",{},
+      el("li",{},"Часть 1 «Стоп-блок»: нужно 10 из 10."),
+      el("li",{},"Части 2–5: не менее 90% (не более 2 ошибок из 24)."),
+      el("li",{},"После теста — ролевые сценарии с тренером.")),
+    el("p",{class:"notice"},"После теста нажмите «Скопировать результат» и отправьте его тренеру в Telegram."),
+    el("label",{class:"small mute",for:"nm"},"Фамилия и имя"),
+    el("input",{id:"nm",type:"text",value:state.name||"",style:"width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);margin:6px 0 14px",oninput:e=>{state.name=e.target.value;}}),
+    el("div",{class:"row"}, el("button",{class:"btn",onclick:()=>{ if(!(state.name||"").trim()){ const n=$("#nm"); n.style.borderColor="var(--acc)"; n.focus(); return; } state.stage="test"; state.answers={}; state.free={}; state.order={}; PARTS.forEach(p=>p.qs.forEach(q=>{ if(q.o) state.order[q.key]=shuffle(Object.keys(q.o)); })); render(); window.scrollTo(0,0);} },"Начать тест"))
+  ));
+}
+
+// ---------- ТЕСТ ----------
+function answeredCount(){ let n=0; PARTS.forEach(p=>p.qs.forEach(q=>{ if(p.type==="mcq"? state.answers[q.key]: (state.free[q.key]||"").trim().length>5) n++; })); return n; }
+const TOTAL_Q = PARTS.reduce((s,p)=>s+p.qs.length,0);
+function renderTest(app){
+  const prog = el("div",{class:"progress"}, el("div",{class:"row small mute",style:"justify-content:space-between"}, el("span",{id:"progtxt"},""), el("span",{},"Ответы можно менять до отправки")), el("div",{class:"bar"}, el("i",{id:"progbar"})));
+  app.append(prog);
+  PARTS.forEach(p=>{
+    app.append(el("h2",{},p.title));
+    if(p.note) app.append(el("p",{class:"small mute"},p.note));
+    p.qs.forEach(q=>{
+      const card = el("div",{class:"card"}, el("div",{class:"q"}, q.id+". ", q.t));
+      if(p.type==="mcq"){
+        state.order[q.key].forEach((key,i)=>{
+          const id="o_"+q.id+"_"+key;
+          const lab = el("label",{class:"opt"+(state.answers[q.key]===key?" sel":""),for:id},
+            el("input",{type:"radio",name:"q_"+q.id,id,value:key,checked:state.answers[q.key]===key?"checked":false,onchange:()=>{ state.answers[q.key]=key; card.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel")); lab.classList.add("sel"); updProg(); }}),
+            el("span",{}, LETTERS[i]+") "+q.o[key]));
+          card.append(lab);
+        });
+      } else {
+        const ta = el("textarea",{placeholder:"Что не так и как сказать правильно",oninput:e=>{ state.free[q.key]=e.target.value; updProg(); }});
+        ta.value = state.free[q.key]||"";
+        card.append(ta);
+      }
+      app.append(card);
+    });
+  });
+  const err = el("p",{class:"notice hide",id:"err"},"");
+  app.append(err, el("div",{class:"row"}, el("button",{class:"btn",id:"submit",onclick:submit},"Завершить и отправить"), el("button",{class:"btn ghost",onclick:()=>{ state.stage="intro"; render(); }},"Отмена")));
+  updProg();
+}
+function updProg(){ const n=answeredCount(); const t=$("#progtxt"); if(t) t.textContent=`Отвечено ${n} из ${TOTAL_Q}`; const b=$("#progbar"); if(b) b.style.width=(n/TOTAL_Q*100)+"%"; }
+
+function score(answers){
+  const p1 = PARTS[0].qs.filter(q=>answers[q.key]===q.k).length;
+  const auto = PARTS.filter(p=>AUTO_PARTS.includes(p.id)).flatMap(p=>p.qs).filter(q=>answers[q.key]===q.k).length;
+  return {p1, auto};
+}
+function status(a){
+  const graded = Object.keys(a.freeGrades||{}).length === FREE_TOTAL;
+  const free = Object.values(a.freeGrades||{}).filter(v=>v===1).length;
+  if(a.p1 < P1_TOTAL) return {txt:"Не сдан: стоп-блок", cls:"bad"};
+  if(!graded){ const maxPossible = a.auto + FREE_TOTAL; if(maxPossible < 22) return {txt:"Не сдан: части 2–5", cls:"bad"}; return {txt:"Ждёт проверки части 2", cls:"warn"}; }
+  const total = a.auto + free;
+  return total >= 22 ? {txt:`Тест сдан (${total}/24)`, cls:"ok"} : {txt:`Не сдан: части 2–5 (${total}/24)`, cls:"bad"};
+}
+
+async function submit(){
+  const n=answeredCount();
+  if(n<TOTAL_Q){ const e=$("#err"); e.textContent=`Ответьте на все вопросы: осталось ${TOTAL_Q-n}.`; e.classList.remove("hide"); return; }
+  const btn=$("#submit"); btn.disabled=true; btn.textContent="Сохраняю…";
+  const s = score(state.answers);
+  const attempt = { at: Date.now(), answers: {...state.answers}, free: {...state.free}, p1: s.p1, auto: s.auto, freeGrades: {}, sims: {} };
+  state.last = attempt; state.saved = false;
+  if(db && myId){
+    try{
+      const ref = db.doc("results/"+myId);
+      const snap = await ref.get();
+      const prev = dd(snap);
+      const attempts = (prev && Array.isArray(prev.attempts)) ? prev.attempts.slice() : [];
+      attempts.push(attempt);
+      await ref.set({ uid: myId, updatedAt: Date.now(), attempts });
+      state.saved = true;
+    }catch(e){ state.saveErr = String(e && e.message || e); }
+  }
+  state.stage="done"; render(); window.scrollTo(0,0);
+}
+
+// ---------- РЕЗУЛЬТАТ ----------
+function renderDone(app){
+  const a = state.last, st = status(a);
+  app.append(el("div",{class:"card"},
+    el("h2",{style:"margin-top:0;font-size:22px"},"Тест отправлен"),
+    el("p",{}, el("span",{class:"tag "+st.cls}, st.txt)),
+    el("table",{}, el("tbody",{},
+      el("tr",{}, el("td",{},"Часть 1. Стоп-блок"), el("td",{}, `${a.p1} из ${P1_TOTAL}`), el("td",{}, a.p1===P1_TOTAL? el("span",{class:"tag ok"},"зачёт") : el("span",{class:"tag bad"},"пересдача через 3 дня"))),
+      el("tr",{}, el("td",{},"Части 3–5"), el("td",{}, `${a.auto} из ${AUTO_TOTAL}`), el("td",{},"")),
+      el("tr",{}, el("td",{},"Часть 2"), el("td",{}, "проверит тренер"), el("td",{},"")))),
+    reportBox(a)
+  ));
+  app.append(el("h2",{},"Разбор ошибок"));
+  let wrong=0;
+  PARTS.filter(p=>p.type==="mcq").forEach(p=>p.qs.forEach(q=>{
+    const ok = a.answers[q.key]===q.k; if(ok) return; wrong++;
+    app.append(el("div",{class:"card res-wrong"}, el("div",{class:"q"}, q.id+". ", q.t),
+      el("div",{class:"small"}, "Ваш ответ: ", q.o[a.answers[q.key]]||"—"),
+      el("div",{class:"small"}, el("b",{},"Верно: "), q.o[q.k]),
+      el("div",{class:"expl"}, q.e)));
+  }));
+  if(!wrong) app.append(el("p",{class:"mute"},"В вопросах с выбором ошибок нет."));
+  app.append(el("div",{class:"row",style:"margin-top:16px"}, el("button",{class:"btn ghost",onclick:()=>{ state.stage="intro"; render(); }},"На главную")));
+}
+
+function reportText(a){
+  const L=[];
+  L.push("АТТЕСТАЦИЯ АДМИНИСТРАТОРА · Бенедикт");
+  L.push("Сотрудник: "+(state.name||"").trim());
+  L.push("Дата: "+fmtDate(a.at));
+  L.push("Стоп-блок: "+a.p1+"/"+P1_TOTAL+(a.p1===P1_TOTAL?" (зачёт)":" (пересдача)"));
+  L.push("Части 3–5: "+a.auto+"/"+AUTO_TOTAL);
+  const wrong=PARTS.filter(p=>p.type==="mcq").flatMap(p=>p.qs).filter(q=>a.answers[q.key]!==q.k).map(q=>q.id);
+  L.push("Ошибки: "+(wrong.length?wrong.join(", "):"нет"));
+  L.push("");
+  L.push("Часть 2 (проверяет тренер):");
+  PARTS.find(p=>p.id==="p2").qs.forEach(q=>L.push(q.id+" "+(a.free[q.key]||"").trim()));
+  return L.join("\n");
+}
+function reportBox(a){
+  const txt=reportText(a);
+  const ta=el("textarea",{readonly:"readonly",style:"min-height:160px;font-size:13px"}); ta.value=txt;
+  const msg=el("span",{class:"small mute"},"");
+  const copy=async()=>{ try{ await navigator.clipboard.writeText(txt); msg.textContent="Скопировано. Вставьте в чат с тренером."; }catch(e){ ta.focus(); ta.select(); try{ document.execCommand("copy"); msg.textContent="Скопировано. Вставьте в чат с тренером."; }catch(_){ msg.textContent="Выделите текст и скопируйте вручную."; } } };
+  return el("div",{}, el("p",{class:"small mute",style:"margin-top:16px"},"Отправьте этот текст тренеру в Telegram:"), ta, el("div",{class:"row",style:"margin-top:10px"}, el("button",{class:"btn",onclick:copy},"Скопировать результат"), msg));
+}
+// ---------- РУКОВОДИТЕЛЬ ----------
+let mgr = { rows:null, err:null, open:null, unsub:null, names:{} };
+async function loadMgr(){
+  if(!db){ mgr.err="Хранилище недоступно в этом просмотре."; return; }
+  if(mgr.unsub) return;
+  const t=setTimeout(()=>{ if(mgr.rows===null){ mgr.err="Не удалось загрузить результаты за 10 секунд."; render(); } },10000);
+  try{
+    mgr.unsub = db.collection("results").onSnapshot(async snap=>{
+      clearTimeout(t);
+      const docs = (snap.docs||snap||[]).map(d=> ({ ...dd(d), id: d.id }));
+      mgr.rows = docs; mgr.err=null;
+      try{ const ids=docs.map(d=>d.uid||d.id); if(user && ids.length){ const ps=await user.profiles(ids); ids.forEach(id=>{ mgr.names[id]=(ps[id]&&ps[id].name)||""; }); } }catch(e){}
+      if(state.view==="mgr") render();
+    }, err=>{ clearTimeout(t); mgr.err=String(err&&err.message||err); if(state.view==="mgr") render(); });
+  }catch(e){ clearTimeout(t); mgr.err=String(e&&e.message||e); }
+}
+function nameOf(uid){ return mgr.names[uid] || ("Сотрудник " + String(uid).slice(-4)); }
+
+function renderMgr(app){
+  if(!isMgr){ app.append(el("p",{class:"notice"},"Раздел доступен только руководителю.")); return; }
+  loadMgr();
+  if(mgr.err){ app.append(el("p",{class:"notice"},mgr.err)); return; }
+  if(mgr.rows===null){ app.append(el("p",{class:"mute"},"Загрузка результатов…")); return; }
+  if(mgr.open) return renderAttempt(app);
+  if(!mgr.rows.length){ app.append(el("div",{class:"card"}, el("p",{},"Пока никто не прошёл тест."), el("p",{class:"small mute"},"Поделитесь страницей с администраторами с правом «Contributor» (может вносить изменения): иначе их результаты не сохранятся."))); return; }
+  const tb = el("tbody");
+  mgr.rows.forEach(r=> (r.attempts||[]).forEach((a,i)=>{
+    const st=status(a); const sims = simSummary(a);
+    tb.append(el("tr",{},
+      el("td",{}, nameOf(r.uid||r.id)), el("td",{class:"small"}, fmtDate(a.at)),
+      el("td",{}, `${a.p1}/${P1_TOTAL}`), el("td",{}, `${a.auto}/${AUTO_TOTAL}`),
+      el("td",{}, Object.keys(a.freeGrades||{}).length===FREE_TOTAL ? `${Object.values(a.freeGrades).filter(v=>v===1).length}/${FREE_TOTAL}` : "—"),
+      el("td",{class:"small"}, sims),
+      el("td",{}, el("span",{class:"tag "+st.cls}, st.txt)),
+      el("td",{}, el("button",{class:"btn ghost",style:"padding:4px 10px",onclick:()=>{ mgr.open={doc:r.id, idx:i}; render(); window.scrollTo(0,0);} },"Открыть"))));
+  }));
+  app.append(el("div",{class:"card",style:"overflow-x:auto"}, el("table",{}, el("thead",{}, el("tr",{}, ...["Сотрудник","Дата","Стоп-блок","Части 3–5","Часть 2","Сценарии","Итог",""].map(h=>el("th",{},h)))), tb)));
+  app.append(el("p",{class:"small mute"},"Администраторам нужна ссылка на эту страницу с правом «Contributor». Результаты каждого видят только он сам и руководитель."));
+}
+function simSummary(a){
+  const s=a.sims||{}; const done=SIMS.filter(x=>s[x.id]);
+  if(!done.length) return "—";
+  const fails = done.filter(x=> x.crit ? !(s[x.id].items||[]).every(Boolean) : weighted(s[x.id].scores)<90 ).length;
+  return `${done.length}/6 оценено` + (fails? `, ${fails} без зачёта`:"");
+}
+function weighted(scores){ if(!scores) return 0; return Math.round(CRITERIA.reduce((s,[_,w],i)=> s + ((scores[i]||0)/3)*w, 0)); }
+
+function renderAttempt(app){
+  const r = mgr.rows.find(x=>x.id===mgr.open.doc); if(!r){ mgr.open=null; return render(); }
+  const a = JSON.parse(JSON.stringify(r.attempts[mgr.open.idx]));
+  a.freeGrades = a.freeGrades||{}; a.sims = a.sims||{};
+  app.append(el("div",{class:"row"}, el("button",{class:"btn ghost",onclick:()=>{ mgr.open=null; render(); }},"← Ко всем результатам")));
+  app.append(el("h2",{}, nameOf(r.uid||r.id), " · ", fmtDate(a.at)));
+  const stBox = el("p",{}); const setSt=()=>{ stBox.innerHTML=""; const st=status(a); stBox.append(el("span",{class:"tag "+st.cls},st.txt), " ", el("span",{class:"small mute"}, `стоп-блок ${a.p1}/${P1_TOTAL} · части 3–5 ${a.auto}/${AUTO_TOTAL}`)); }; setSt();
+  app.append(stBox);
+
+  app.append(el("h3",{},"Часть 2 — оценка тренера"));
+  PARTS.find(p=>p.id==="p2").qs.forEach(q=>{
+    const sel = el("select",{onchange:e=>{ if(e.target.value==="") delete a.freeGrades[q.key]; else a.freeGrades[q.key]=+e.target.value; setSt(); }},
+      el("option",{value:""},"—"), el("option",{value:"1"},"Зачтено"), el("option",{value:"0"},"Не зачтено"));
+    sel.value = a.freeGrades[q.key]===undefined ? "" : String(a.freeGrades[q.key]);
+    app.append(el("div",{class:"card"}, el("div",{class:"q"}, q.id+". ", q.t),
+      el("div",{}, el("b",{},"Ответ: "), a.free[q.key]||"—"),
+      el("div",{class:"expl"}, "Эталон: ", q.k),
+      el("div",{class:"row",style:"margin-top:8px"}, sel)));
+  });
+
+  app.append(el("h3",{},"Ошибки в вопросах с выбором"));
+  let w=0;
+  PARTS.filter(p=>p.type==="mcq").forEach(p=>p.qs.forEach(q=>{ if(a.answers[q.key]===q.k) return; w++;
+    app.append(el("div",{class:"card res-wrong small"}, el("b",{},q.id+". "), q.t, el("div",{},"Ответ: ", q.o[a.answers[q.key]]||"—"), el("div",{},"Верно: ", q.o[q.k]))); }));
+  if(!w) app.append(el("p",{class:"mute"},"Ошибок нет."));
+
+  app.append(el("h3",{},"Ролевые сценарии"));
+  SIMS.forEach(sm=>{
+    const box = el("div",{class:"card"}, el("div",{class:"q"}, sm.t, " ", el("span",{class:"tag "+(sm.crit?"bad":"")}, sm.crit?"все действия обязательны":"зачёт от 90 баллов")));
+    const cur = a.sims[sm.id];
+    if(sm.crit){
+      const items = (cur&&cur.items)||sm.items.map(()=>false);
+      sm.items.forEach((t,i)=>{ const cb=el("input",{type:"checkbox",checked:items[i]?"checked":false,onchange:e=>{ items[i]=e.target.checked; a.sims[sm.id]={items:items.slice()}; }}); box.append(el("label",{class:"opt"}, cb, el("span",{},t))); });
+    } else {
+      const scores = (cur&&cur.scores)||CRITERIA.map(()=>null);
+      const tot = el("div",{class:"small mute",style:"margin-top:6px"},"");
+      const upd=()=>{ tot.textContent = scores.every(v=>v!=null) ? `Итог: ${weighted(scores)} из 100` : "Оцените все критерии"; };
+      CRITERIA.forEach(([c,wgt],i)=>{
+        const s=el("select",{onchange:e=>{ scores[i]= e.target.value===""? null : +e.target.value; a.sims[sm.id]={scores:scores.slice()}; upd(); }}, el("option",{value:""},"—"), ...[0,1,2,3].map(v=>el("option",{value:String(v)},String(v))));
+        s.value = scores[i]==null? "" : String(scores[i]);
+        box.append(el("div",{class:"row",style:"justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"}, el("span",{class:"small"}, `${c} (вес ${wgt})`), s));
+      });
+      upd(); box.append(tot);
+    }
+    app.append(box);
+  });
+
+  const msg = el("p",{class:"small mute"},"");
+  app.append(el("div",{class:"row"}, el("button",{class:"btn",onclick:async(e)=>{
+    e.target.disabled=true; msg.textContent="Сохраняю…";
+    try{
+      const ref=db.doc("results/"+r.id); const snap=await ref.get(); const cur=dd(snap)||{}; delete cur.id;
+      const attempts=(cur.attempts||[]).slice(); attempts[mgr.open.idx]=a;
+      await ref.set({...cur, attempts, updatedAt:Date.now()});
+      msg.textContent="Оценка сохранена.";
+    }catch(err){ msg.textContent="Не удалось сохранить: "+(err&&err.message||err); }
+    e.target.disabled=false;
+  }},"Сохранить оценку"), msg));
+}
+
+boot();
+</script>
+</body>
+</html>
