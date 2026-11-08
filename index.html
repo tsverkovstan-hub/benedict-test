@@ -116,6 +116,16 @@ const RULES = [
 
 // ---------- ВОПРОСЫ ----------
 const PARTS = [
+ {id:"p0", warm:true, short:"Разминка", title:"Разминка. Слова-паразиты", note:"Не идёт в зачёт. Выберите, как сказать правильно, — ответ проверяется сразу.", type:"mcq", qs:[
+  {id:"0.1", t:"Пациент рассказывает о ситуации. Вместо «угу… угу…» говорим:", o:{"а":"«Ага»","б":"«Да, понимаю» / «Слушаю вас»","в":"«Ну да»","г":"«Окей»"}, k:"б", e:"«Угу» и «ага» звучат как равнодушие. Короткое «да, понимаю» показывает, что вы слушаете."},
+  {id:"0.2", t:"«Щас гляну, секундочку…»", o:{"а":"«Минуточку подождите»","б":"«Щас посмотрю»","в":"«Сейчас проверю в расписании, это займёт около минуты»","г":"Молча искать в системе"}, k:"в", e:"Без «щас» и уменьшительных; говорим, что делаем и сколько это займёт."},
+  {id:"0.3", t:"«Девушка, вам когда удобно?»", o:{"а":"«[Имя], когда вам удобнее: утром или ближе к вечеру?»","б":"«Женщина, вам когда?»","в":"«Вам как удобно-то?»","г":"«Ну, говорите, когда»"}, k:"а", e:"Обращаемся по имени, которое узнали в начале разговора. «Девушка», «женщина», «мужчина» — недопустимо."},
+  {id:"0.4", t:"«Короче, есть окошко на среду».", o:{"а":"«Типа есть среда»","б":"«Могу предложить среду, 15:00, или четверг, 11:00. Какой вариант удобнее?»","в":"«Короче, только среда»","г":"«Окошечко найдём»"}, k:"б", e:"Без «короче» и уменьшительных; конкретные варианты и вопрос о выборе."},
+  {id:"0.5", t:"«Не знаю, это не ко мне».", o:{"а":"«Это вам к врачу, звоните ему»","б":"«Я тут ничего не решаю»","в":"«Без понятия, спросите потом»","г":"«Уточню у ответственного специалиста и вернусь к вам до [время]»"}, k:"г", e:"Администратор не знает всего, но всегда отвечает за следующий шаг и срок."},
+  {id:"0.6", t:"«Вам нужно было раньше звонить, сейчас всё занято».", o:{"а":"«Сейчас посмотрю, что могу предложить в ближайшие дни, и, если нужно, внесу вас в лист ожидания»","б":"«Сами виноваты, места разбирают за месяц»","в":"«Ну, бывает»","г":"«Звоните в начале месяца»"}, k:"а", e:"Не упрекаем пациента — предлагаем решение."},
+  {id:"0.7", t:"Нужно ненадолго отойти от разговора. Вместо «Ожидайте»:", o:{"а":"«Висите, я щас»","б":"«Подождите»","в":"«Разрешите поставить вас на удержание на минуту, чтобы проверить расписание?»","г":"Поставить на удержание без предупреждения"}, k:"в", e:"Спрашиваем разрешения и называем время."},
+  {id:"0.8", t:"Завершение разговора. Вместо «Всё, давайте, пока»:", o:{"а":"«Ну всё, до связи»","б":"«Спасибо за обращение. До встречи в клинике Бенедикт!»","в":"«Давайте, всего»","г":"«Ладненько, до свиданьица»"}, k:"б", e:"Фраза завершения из стандарта первого контакта."}
+ ]},
  {id:"p1", short:"Стоп-блок", title:"Часть 1. Стоп-блок", note:"Порог — все ответы верны. Одна ошибка — пересдача части через 3 дня.", type:"mcq", qs:[
   {id:"1.1", t:"Мама 18-летней пациентки: «У неё сильная тревога, постоянно паники, и ощущение, что всё бессмысленно и ничего не поможет». Ваше первое действие?", o:{"а":"Успокоить: «Это похоже на паническое расстройство, с ним хорошо работают»","б":"Задать прямой вопрос: бывают ли у дочери мысли не жить или причинить себе вред","в":"Предложить самого доступного врача и ближайшую дату","г":"Попросить, чтобы дочь позвонила сама"}, k:"б", e:"«Всё бессмысленно, ничего не поможет» — безнадёжность, сигнал стоп-блока. Вариант «а» — диагноз от администратора."},
   {id:"1.2", t:"Пациент: «У меня нет сил, я уже вторую неделю лежу, не вставая». На вопрос о мыслях не жить отвечает «нет». Что дальше?", o:{"а":"Маршрут В: обычная запись, раз ответ «нет»","б":"Предложить записаться через сайт в удобное время","в":"Маршрут Б: тяжёлые симптомы — передать дежурному врачу, несмотря на ответ «нет»","г":"Внести в лист ожидания к желаемому врачу"}, k:"в", e:"Две недели в постели — тяжёлый симптом. Ответ «нет» не переводит в маршрут В."},
@@ -183,7 +193,7 @@ const PARTS = [
   {id:"7.8", t:"Каким результатом должен заканчиваться каждый звонок?", o:{"а":"Обязательно записью","б":"Записью или отказом — третьего не бывает","в":"Записью, согласованным следующим контактом, передачей ответственному специалисту либо уважительно принятым отказом","г":"Тем, что пациент сам перезвонит"}, k:"в", e:"Правило 7 стандарта. Каждая договорённость о перезвоне или передаче фиксируется в CRM: ответственный, срок, подтверждение."}
  ]}
 ];
-PARTS.forEach(p=>p.qs.forEach(q=>{ q.key=q.id.replace(".","_"); }));
+PARTS.forEach(p=>p.qs.forEach(q=>{ q.key=q.id.replace(".","_"); if(p.warm){ q.train=true; q.warm=true; } }));
 
 const SIMS = [
  {id:"C1", t:"С1. Реакция на препарат", crit:true, items:["Остановил обычный сценарий и спросил, как пациент прямо сейчас","При признаках опасности сейчас — 103 немедленно; иначе предупредил о 103 при ухудшении","Не дал совета про приём препарата","Позвонил врачу голосом, передал сводку по SBAR","Получил подтверждение, назвал звонящему точное время связи","Записал событие в журнал красных флагов"]},
@@ -195,7 +205,7 @@ const SIMS = [
 ];
 const CRITERIA = [["Распознавание срочности и маршрут",20],["Уважение и психологическая безопасность",20],["Точность понимания запроса",15],["Соответствие врача запросу",15],["Прозрачность цены и условий",10],["Согласованный следующий шаг",10],["Документирование и передача",10]];
 
-const P1 = PARTS[0];
+const P1 = PARTS.find(p=>p.id==="p1");
 const P1_TOTAL = P1.qs.length;
 const REST_MCQ = PARTS.filter(p=>p.type==="mcq" && p.id!=="p1").flatMap(p=>p.qs).filter(q=>!q.train);
 const FREE = PARTS.find(p=>p.id==="p2").qs;
@@ -211,7 +221,7 @@ function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.flo
 const LETTERS = ["а","б","в","г"];
 const dd = d => !d ? null : (typeof d.data==="function" ? d.data() : (d.data && typeof d.data==="object" ? d.data : d));
 const fmtDate = ts => new Date(ts).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
-const DKEY = "benedict-attest-v2.2";
+const DKEY = "benedict-attest-v2.3";
 const ls = { get(){ try{ return JSON.parse(localStorage.getItem(DKEY)||"null"); }catch(e){ return null; } }, set(v){ try{ localStorage.setItem(DKEY, JSON.stringify(v)); }catch(e){} }, del(){ try{ localStorage.removeItem(DKEY); }catch(e){} } };
 
 let db=null, user=null, myId=null, isMgr=false;
@@ -266,7 +276,7 @@ function renderIntro(app){
   app.append(el("div",{class:"card"},
     el("h2",{style:"margin-top:0;font-size:22px"},"Как устроена аттестация"),
     el("table",{class:"levels"}, el("tbody",{},
-      el("tr",{}, el("td",{},"Уровень 1. Теория"), el("td",{}, `Этот тест: ${TOTAL_Q} вопросов в семи частях, около 40 минут. Стоп-блок — ${P1_TOTAL} из ${P1_TOTAL}; части 2–7 — не менее ${REST_PASS} из ${REST_TOTAL} после проверки тренером.`)),
+      el("tr",{}, el("td",{},"Уровень 1. Теория"), el("td",{}, `Этот тест: ${TOTAL_Q} вопросов в разминке и семи частях, около 45 минут. Стоп-блок — ${P1_TOTAL} из ${P1_TOTAL}; части 2–7 — не менее ${REST_PASS} из ${REST_TOTAL} после проверки тренером.`)),
       el("tr",{}, el("td",{},"Уровень 2. Клиническая маршрутизация"), el("td",{},"Три обязательных ролевых сценария с тренером: реакция на препарат, безнадёжность подростка, симптомы инсульта. Ни одной критической ошибки.")),
       el("tr",{}, el("td",{},"Уровень 3. Сервисная коммуникация"), el("td",{},"Три ролевых сценария: подбор врача, сомнения из-за цены, запрос родственника. Каждый — от 90 из 100.")),
       el("tr",{}, el("td",{},"Допуск к самостоятельной работе"), el("td",{},"После всех трёх уровней и утверждения руководителем.")))),
@@ -291,21 +301,24 @@ function partDone(p){ return p.qs.every(q=>isAnswered(p,q)); }
 function renderTest(app){
   const p = PARTS[state.step];
   const n = answeredCount();
-  app.append(el("div",{class:"steps"}, PARTS.map((pp,i)=>el("button",{class:(i===state.step?"on ":"")+(partDone(pp)?"done":""),onclick:()=>{ state.step=i; saveDraft(); render(); window.scrollTo(0,0);} }, (i+1)+". "+pp.short))));
+  app.append(el("div",{class:"steps"}, PARTS.map((pp,i)=>el("button",{class:(i===state.step?"on ":"")+(partDone(pp)?"done":""),onclick:()=>{ state.step=i; saveDraft(); render(); window.scrollTo(0,0);} }, pp.warm? pp.short : i+". "+pp.short))));
   app.append(el("div",{class:"row small mute",style:"justify-content:space-between"}, el("span",{id:"progtxt"},`Отвечено ${n} из ${TOTAL_Q}`), el("span",{},"Черновик сохраняется на этом устройстве")));
   app.append(el("div",{class:"bar"}, el("i",{id:"progbar",style:`width:${n/TOTAL_Q*100}%`})));
   app.append(el("h2",{},p.title));
   if(p.note) app.append(el("p",{class:"small mute"},p.note));
   p.qs.forEach(q=>{
-    const card = el("div",{class:"card"}, el("div",{class:"q"}, q.id+". ", q.t, q.train? [" ", el("span",{class:"tag warn"},"учебный, вне зачёта")] : null));
+    const card = el("div",{class:"card"}, el("div",{class:"q"}, q.id+". ", q.t, q.train && !q.warm ? [" ", el("span",{class:"tag warn"},"учебный, вне зачёта")] : null));
     if(p.type==="mcq"){
       state.order[q.key].forEach((key,i)=>{
         const id="o_"+q.key+"_"+key;
         const lab = el("label",{class:"opt"+(state.answers[q.key]===key?" sel":""),for:id},
-          el("input",{type:"radio",name:"q_"+q.key,id,value:key,checked:state.answers[q.key]===key?"checked":false,onchange:()=>{ state.answers[q.key]=key; card.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel")); lab.classList.add("sel"); updProg(); saveDraft(); }}),
+          el("input",{type:"radio",name:"q_"+q.key,id,value:key,checked:state.answers[q.key]===key?"checked":false,onchange:()=>{ state.answers[q.key]=key; card.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel")); lab.classList.add("sel"); if(q.warm) showFb(); updProg(); saveDraft(); }}),
           el("span",{}, LETTERS[i]+") "+q.o[key]));
         card.append(lab);
       });
+      const fb = el("div",{class:"expl"}); card.append(fb);
+      function showFb(){ const a=state.answers[q.key]; if(!a) return; fb.innerHTML=""; fb.append(a===q.k? el("span",{class:"tag ok"},"Верно") : el("span",{class:"tag bad"},"Не так"), " ", a===q.k? q.e : "Правильно: "+q.o[q.k]+". "+q.e); }
+      if(q.warm) showFb();
     } else {
       const ta = el("textarea",{placeholder:"Что не так и как сказать правильно",oninput:e=>{ state.free[q.key]=e.target.value; updProg(); saveDraft(); }});
       ta.value = state.free[q.key]||"";
@@ -379,7 +392,7 @@ function reportText(a){
   L.push("Дата: "+fmtDate(a.at));
   L.push(`Стоп-блок: ${a.p1}/${P1_TOTAL}`+(a.p1===P1_TOTAL?" (зачёт)":" (пересдача)"));
   L.push(`Части 3–7 с выбором: ${a.auto}/${REST_MCQ.length}`);
-  const wrong=ALL_Q.filter(q=>q.o && a.answers[q.key]!==q.k).map(q=>q.id+(q.train?" (учебный)":""));
+  const wrong=ALL_Q.filter(q=>q.o && !q.warm && a.answers[q.key]!==q.k).map(q=>q.id+(q.train?" (учебный)":""));
   L.push("Ошибки: "+(wrong.length?wrong.join(", "):"нет"));
   L.push(`Порог частей 2–7: ${REST_PASS}/${REST_TOTAL} после проверки части 2`);
   L.push("");
@@ -409,7 +422,7 @@ function renderDone(app){
   ));
   app.append(el("h2",{},"Разбор ошибок"));
   let wrong=0;
-  ALL_Q.filter(q=>q.o).forEach(q=>{
+  ALL_Q.filter(q=>q.o && !q.warm).forEach(q=>{
     if(a.answers[q.key]===q.k) return; wrong++;
     app.append(el("div",{class:"card res-wrong"}, el("div",{class:"q"}, q.id+". ", q.t),
       el("div",{class:"small"}, "Ваш ответ: ", q.o[a.answers[q.key]]||"—"),
@@ -492,7 +505,7 @@ function renderAttempt(app){
 
   app.append(el("h3",{},"Ошибки в вопросах с выбором"));
   let w=0;
-  ALL_Q.filter(q=>q.o).forEach(q=>{ if(a.answers[q.key]===q.k) return; w++;
+  ALL_Q.filter(q=>q.o && !q.warm).forEach(q=>{ if(a.answers[q.key]===q.k) return; w++;
     app.append(el("div",{class:"card res-wrong small"}, el("b",{style:"font-weight:600"},q.id+". "), q.t, q.train?" (учебный)":"", el("div",{},"Ответ: ", q.o[a.answers[q.key]]||"—"), el("div",{},"Верно: ", q.o[q.k]))); });
   if(!w) app.append(el("p",{class:"mute"},"Ошибок нет."));
 
